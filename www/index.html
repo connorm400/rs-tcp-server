@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+        <title>custom tcp server built using rust</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>custom tcp server built using rust</h1>
+        <h3>here are its features:</h3>
+        <ul>
+            <li>file based routing</li>
+            <li>returns a 404 if the file with the specified path isn't found</li>
+            <li>supports subdirectories</li>
+        </ul>
+        <h3>Of course it also has some drawbacks: </h3>
+        <ul>
+            <li>It doesnt support images, all it supports currently is html and stylesheets</li>
+            <li>its single threaded</li>
+            <li>it is possible to panic; there are a few unwraps and expects</li>
+            <li>all filesystem errors are returned as 404s.</li>
+        </ul>
+    </body>
+</html>
