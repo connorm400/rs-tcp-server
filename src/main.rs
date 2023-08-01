@@ -42,7 +42,7 @@ fn handle_client(mut stream: TcpStream) {
     if path == "/" {file_to_read.push_str(format!("{PATH}/index.html").as_str())}
     // put all custom file formats here
     else if path.contains(".css") {file_to_read.push_str(format!("{PATH}/{path}").as_str())} 
-    else if path.contains(".png") {file_to_read.push_str(format!("{PATH}/{path}").as_str())} 
+    //else if path.contains(".png") {file_to_read.push_str(format!("{PATH}/{path}").as_str())} 
     //else if path.contains(".ico") {file_to_read.push_str(format!("{PATH}/{path}").as_str())}
     
     else {file_to_read.push_str(format!("{PATH}/{path}.html").as_str())}
