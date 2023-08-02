@@ -41,7 +41,6 @@ fn handle_client(mut stream: TcpStream) {
         .next() // move over the first line 
         .unwrap().unwrap(); //unwraps the Option and the Result
     
-
     // we need the HTTP method and the path from the tcp stream. I split it with the space. 
     // I dont think its possible for the unwraps to panic since the two elements should always be there
     let mut split_request_iter = request_line.split(" ");
@@ -57,27 +56,23 @@ fn handle_client(mut stream: TcpStream) {
 
     let mut file_to_read = String::new();
     
+    // index 
     if path == "/" {file_to_read.push_str(format!("{DOCUMENTS_PATH}/index.html").as_str())}
-    
-    // put all custom file formats here
-    else if path.contains(".css") {file_to_read.push_str(format!("{DOCUMENTS_PATH}/{path}").as_str())} 
-        //you could alternatively have only one universal css file with a line like this:
-        // else if path.contains(".css") {file_to_read.push_str(format!({DOCUMENTS_PATH}/style.css).as_str())}
-    
-    //else if path.contains(".png") {file_to_read.push_str(format!("{DOCUMENTS_PATH}/{path}").as_str())} 
-    //else if path.contains(".ico") {file_to_read.push_str(format!("{DOCUMENTS_PATH}/{path}").as_str())}
-    
-    // this is the line for all html files that arent the index
+    //universal stylesheet
+    else if path.contains("/style.css") {file_to_read.push_str(format!("{DOCUMENTS_PATH}/style.css").as_str())}
+    //any random file with a file format (might break if you have a domain idk)
+    else if path.contains(".") {file_to_read.push_str(format!("{DOCUMENTS_PATH}/{path}").as_str())}
+    //anything without a file ending with be treated as an html file
     else {file_to_read.push_str(format!("{DOCUMENTS_PATH}/{path}.html").as_str())} 
 
     let (status, contents) = match fs::read_to_string(file_to_read) {
         Ok(c) => ("HTTP/1.1 200 OK", c),
-        Err(_e) => { // we'll just assume that the error is just that the file doesnt exist
+        Err(_e) => {
             if let ErrorKind::NotFound = _e.kind() {
                 ("HTTP/1.1 404 NOT FOUND", fs::read_to_string(format!("{DOCUMENTS_PATH}/404.html").as_str())
                    .expect(format!("must have 404 in path ./{DOCUMENTS_PATH}/404.html").as_str()))
             } else {
-                panic!("not sure how to handle this error...");
+                panic!("not sure how to handle this error... {_e:?}");
             }
         }
     };
